@@ -1,21 +1,17 @@
-import React from 'react'
-import { useQuery } from 'react-query'
-import axios from 'axios'
+import { useSuperHeroData } from "../hooks/useSuperHeroesData"
 
-const fetchSuperHeroes = () => {
-  return axios.get('http://localhost:8000/superheroes')
-}
 
 const RQSuperHeroes = () => {
 
+  const onSuccess = (data) => {
+    console.log("Perform side effect after data fetching.", data)
+  }
+  const onError = (error) => {
+    console.log("Perform side effect after encountering error.", error)
+  }
+
   // isLoading, isError & error is prewriten?
-  const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
-    'super-heroes',
-    fetchSuperHeroes,
-    {
-      enabled: false
-    }
-  )
+  const { isLoading, data, isError, error, isFetching, refetch } = useSuperHeroData(onSuccess, onError)
 
   console.log({ isLoading, isFetching })
 
@@ -31,11 +27,14 @@ const RQSuperHeroes = () => {
     <>
       <h2>RQ Super Heroes</h2>
       <button onClick={refetch}>Fetch heroes</button>
-      {
+      {/* {
         data?.data.map(hero => {
           return <div key={hero.name}>{hero.name}</div>
         })
-      }
+      } */}
+      {data.map((heroName) => {
+        return <div key={heroName}>{heroName}</div>
+      })}
     </>
   )
 }
