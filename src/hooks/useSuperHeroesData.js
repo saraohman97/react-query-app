@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation, useQueryClient } from "react-query"
 import axios from 'axios'
 
 const fetchSuperHeroes = () => {
@@ -14,17 +14,45 @@ export const useSuperHeroData = (onSuccess, onError) => {
         'super-heroes',
         fetchSuperHeroes,
         {
-            // enabled: false
             onSuccess,
             onError,
-            // select: (data) => {
-            //     const superheroNames = data.data.map((hero) => hero.name)
-            //     return superheroNames
-            // }
         }
     )
 }
 
 export const useAddSuperHeroData = () => {
-    return useMutation(addSuperHero)
+    const queryClient = useQueryClient()
+    return useMutation(addSuperHero, {
+        // onSuccess: (data) => {
+        // queryClient.invalidateQueries('super-heroes')
+        // queryClient.setQueryData('super-heroes', (oldQueryData) => {
+        //     return {
+        //         ...oldQueryData,
+        //         data: [...oldQueryData.data, data.data]
+        //     }
+        // })
+        // }
+        onMutate: async (newHero) => {
+            await queryClient.cancelQueries('super-heroes')
+            const previousHeroData = queryClient.getQueryData('super-heroes')
+            queryClient.setQueryData('super-heroes', (oldQueryData) => {
+                return {
+                    ...oldQueryData,
+                    data: [
+                        ...oldQueryData.data,
+                        { id: oldQueryData?.data?.length + 1, ...newHero }
+                    ]
+                }
+            })
+            return {
+                previousHeroData
+            }
+        },
+        onError: (_error, _hero, context) => {
+            queryClient.setQueryData('super-hero', context.previousHeroData)
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries('super-heroes')
+        }
+    })
 }

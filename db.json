@@ -19,6 +19,21 @@
       "name": "The Flash",
       "alterEgo": "Berry Allen",
       "id": 4
+    },
+    {
+      "name": "Spiderman",
+      "alterEgo": "Peter Parker",
+      "id": 5
+    },
+    {
+      "name": "Harley Quinn",
+      "alterEgo": "Harleen Quinsel",
+      "id": 6
+    },
+    {
+      "name": "Aquaman",
+      "alterEgo": "Arthur Curry",
+      "id": 7
     }
   ],
   "friends": [

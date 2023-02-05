@@ -15,7 +15,7 @@ const RQSuperHeroes = () => {
 
   const { isLoading, data, isError, error, isFetching, refetch } = useSuperHeroData(onSuccess, onError)
 
-  const { mutate: addHero, isLoading, isError, error } = useAddSuperHeroData()
+  const { mutate: addHero } = useAddSuperHeroData()
 
   const handleAddHeroClick = () => {
     console.log({ name, alterEgo })
@@ -23,7 +23,7 @@ const RQSuperHeroes = () => {
     addHero(hero)
   }
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <h2>Loading....</h2>
   }
 
